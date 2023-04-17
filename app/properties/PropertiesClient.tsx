@@ -1,23 +1,23 @@
 "use client"
 
-import { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useCallback, useState } from "react"
 import { toast } from "react-hot-toast"
 import axios from "axios"
 
 import Container from "../components/Container"
 import Heading from "../components/Heading"
 import ListingCard from "../components/listings/ListingCard"
-import { SafeReservation, SafeUser } from "../types"
+import { SafeListing, SafeUser } from "../types"
 
-interface TripsClientProps {
-  reservations: SafeReservation[]
+interface PropertiesClientProps {
   currentUser: SafeUser
+  listings: SafeListing[]
 }
 
-const TripsClient: React.FC<TripsClientProps> = ({
-  reservations,
+const PropertiesClient: React.FC<PropertiesClientProps> = ({
   currentUser,
+  listings,
 }) => {
   const router = useRouter()
   const [deletingId, setDeletingId] = useState("")
@@ -27,29 +27,25 @@ const TripsClient: React.FC<TripsClientProps> = ({
       setDeletingId(id)
 
       axios
-        .delete(`/api/reservations/${id}`)
+        .delete(`/api/listing/${id}`)
         .then(() => {
-          toast.success("取消成功！")
+          toast.success("操作成功！")
           router.refresh()
         })
-        .catch(() => {
-          toast.error("")
-        })
-        .finally(() => {
-          setDeletingId("")
-        })
+        .catch(error => toast.error(error?.response?.data?.error))
+        .finally(() => setDeletingId(""))
     },
     [router]
   )
-
   return (
     <Container>
       <Heading
-        title='订单'
-        subtitle='你去过哪里 & 你将要去哪'
+        title='Properties'
+        subtitle='Your properties!'
       />
       <div
         className='
+          gap-8
           mt-10
           grid
           grid-cols-1
@@ -58,19 +54,17 @@ const TripsClient: React.FC<TripsClientProps> = ({
           lg:grid-cols-4
           xl:grid-cols-5
           2xl:grid-cols-6
-          gap-8
-        '
+      '
       >
-        {reservations.map(reservation => (
+        {listings.map(listing => (
           <ListingCard
-            key={reservation.id}
-            data={reservation.listing}
-            reservation={reservation}
-            actionId={reservation.id}
-            actionLabel='取消预定'
-            onAction={onCancel}
-            disabled={deletingId === reservation.id}
+            key={listing.id}
+            data={listing}
+            actionId={listing.id}
             currentUser={currentUser}
+            onAction={onCancel}
+            disabled={listing.id === deletingId}
+            actionLabel='Delete property'
           />
         ))}
       </div>
@@ -78,4 +72,4 @@ const TripsClient: React.FC<TripsClientProps> = ({
   )
 }
 
-export default TripsClient
+export default PropertiesClient

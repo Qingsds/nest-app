@@ -102,7 +102,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   label='我的订单'
                 />
                 <MenuItem
-                  onClick={() => {}}
+                  onClick={() => router.push("/favorites")}
                   label='我喜欢的'
                 />
                 <MenuItem
@@ -110,7 +110,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   label='我的预定'
                 />
                 <MenuItem
-                  onClick={() => {}}
+                  onClick={() => router.push("/properties")}
                   label='我的房源'
                 />
                 <MenuItem

@@ -1,34 +1,34 @@
 import getCurrentUser from "../actions/getCurrentUser"
-import getReservations from "../actions/getReservations"
+import getListings from "../actions/getListings"
 
 import ClientOnly from "../components/ClientOnly"
 import EmptyState from "../components/EmptyState"
-import ReservationsClient from "./ReservationsClient"
+import PropertiesClient from "./PropertiesClient"
 
-const ReservationsPage = async () => {
+const PropertiesPage = async () => {
   const currentUser = await getCurrentUser()
 
   if (!currentUser) {
     return (
       <ClientOnly>
         <EmptyState
-          title='Unauthorized!'
+          title='Unauthorized'
           subtitle='Place login'
         />
       </ClientOnly>
     )
   }
 
-  const reservations = await getReservations({
-    authorId: currentUser.id,
+  const listings = await getListings({
+    userId: currentUser.id,
   })
 
-  if (!reservations || reservations.length === 0) {
+  if (listings.length === 0) {
     return (
       <ClientOnly>
         <EmptyState
-          title='No reservations found'
-          subtitle='Looks like you have no reservations on your properties'
+          title='No properties found'
+          subtitle='Looks like you have no properties!'
         />
       </ClientOnly>
     )
@@ -36,12 +36,12 @@ const ReservationsPage = async () => {
 
   return (
     <ClientOnly>
-      <ReservationsClient
-        reservations={reservations}
+      <PropertiesClient
         currentUser={currentUser}
+        listings={listings}
       />
     </ClientOnly>
   )
 }
 
-export default ReservationsPage
+export default PropertiesPage

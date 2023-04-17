@@ -7,6 +7,20 @@ interface IParams {
   listingId: string
 }
 
+export async function GET(request: Request) {
+  const currentUser = await getCurrentUser()
+
+  if (!currentUser) {
+    return NextResponse.error()
+  }
+}
+
+/**
+ * favorites post
+ * @param request
+ * @param param1
+ * @returns
+ */
 export async function POST(
   request: Request,
   { params }: { params: IParams }
@@ -37,6 +51,12 @@ export async function POST(
   return NextResponse.json(user)
 }
 
+/**
+ * favorite delete
+ * @param request
+ * @param param1
+ * @returns
+ */
 export async function DELETE(
   request: Request,
   { params }: { params: IParams }
